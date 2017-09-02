@@ -1,27 +1,47 @@
-window.onload = function() {
-var x = 0;
+window.onload = function(){
 
-function timer(start, end, variable) {
 
-  var time = start;
+var clocks = new Vue({
 
-  wait();
+  el: '#main-clock',
+  data: {
+    pomodoro: 17,
+    breakClock: 10,
+    stopTime: 0
+    
+  },
 
-  function wait() {
-    time++
-    window.setTimeout(increaseTime, 1000);
+  methods: {
+    
+    startClock: function(clock) {
+      window.setTimeout(this.decreaseClock, 1000, clock);
+    },
+
+    decreaseClock: function(clock) {
+      this[clock]--;
+      if (this[clock] > this.stopTime) {
+        this.startClock(clock);
+      }
+
   }
 
-  function increaseTime() {
-    //variable = time;
-    if (time < end) wait();
   }
+
+
+
+
+});
+
+
+
+clocks.startClock('breakClock');
+
+
 
 
 
 }
 
- timer(0,5,x);
 
 
 
@@ -30,8 +50,3 @@ function timer(start, end, variable) {
 
 
 
-
-
-
-
-}
