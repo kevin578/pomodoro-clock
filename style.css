@@ -1,1 +1,73 @@
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+
+body {
+	background: #E3E4DB;
+	font-family: 'Raleway', sans-serif;
+}
+
+
+.container {
+	margin-top: 30px;
+}
+
+.labels {
+	font-size: 60px;
+	background: #A6EBC9; 
+	width: 500px;
+	padding: 10px;
+}
+
+.digits {
+	font-size: 50px;
+	background: #bfefd8;
+
+}
+
+.pomArrows {
+	background: #d6f5e6;
+	width: 100px;
+}
+
+.breakArrows {
+	background: #dcccff;
+	width: 100px;
+}
+
+.breakText {
+	background: #bb99ff
+}
+
+.break {
+	background: #ccb3ff;
+}
+
+
+.breakTimer {
+	margin-top: 20px;
+}
+
+
+.startPom {
+	margin-top: 20px;
+	background: #49C6E5;
+	cursor: pointer;
+	border-radius: 5px;
+}
+
+.arrows > img {
+	display: block;
+	width: 50px;
+	cursor: pointer;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#tomatoes {
+	margin-top: 35px;
+}
+
+#tomatoes > img {
+	margin-right: 15px;
+	width: 50px;
+}
 

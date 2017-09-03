@@ -1,16 +1,89 @@
 <!DOCTYPE html>
 <head>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel = "stylesheet" href = "style.css">
+<script src="https://use.fontawesome.com/d2bbd36ba3.js"></script>
 <script src="https://unpkg.com/vue"></script>
 <script src = 'main.js'></script>
+
 </head>
 
 <body>
-
-
 <div id = 'main-clock'>
+	<div class="container">
+	
+	<!-- Pomodoo timer -->
+	
 
-<p>{{pomodoro}}</p>
+	<div v-if = 'render.pomodoro'>
+	<!-- Label -->
+	<div class = 'row justify-content-center'>
+		<div class = 'labels'>
+			Pomodoro
+		</div>
+	</div>
+	<!-- pomodoro clock-->
+	<div class = 'row justify-content-center'>
+		<div class = ' digits' v-bind:class = 'classes.pomodoro'>
+			<p>{{pomodoro}}</p>
+		</div>	
+	<!-- pomodoro buttons-->
+		<div v-if = 'render.arrows' class = 'arrows pomArrows'>
+
+			<img v-on:click = 'increaseNum("pomodoro")' src = 'https://image.flaticon.com/icons/svg/25/25678.svg'>
+			<img v-on:click = 'decreaseNum("pomodoro")' src = 'https://image.flaticon.com/icons/svg/25/25243.svg'>
+		</div>
+	</div>
+	</div>
+	
+	
+	<!-- Break timer-->
+	<div v-if = 'render.breakClock'>
+	<!-- Label -->
+	<div class = 'row justify-content-center breakTimer '>
+		<div class = ' labels breakText'>
+			Break
+		</div>
+	</div>
+	<!-- break clock-->
+	<div class = 'row justify-content-center'>
+		<div v-bind:class = 'classes.breakClock' class = ' digits break'>
+			{{breakClock}}
+		</div>
+	<!-- break arrows -->
+		<div  v-if = 'render.arrows' class = 'arrows breakArrows'>
+			<img v-on:click = 'increaseNum("breakClock")' src = 'https://image.flaticon.com/icons/svg/25/25678.svg'>
+			<img v-on:click = 'decreaseNum("breakClock")' src = 'https://image.flaticon.com/icons/svg/25/25243.svg'>
+		</div>
+	</div>
+	</div>
+	
+	
+	<!-- Start/Reset button -->
+	<div class = 'row justify-content-center'>
+		<div v-on:click = 'initClock("pomodoro")' class = ' digits startPom'>
+			{{message}}
+		</div>
+	</div>
+	
+	<div class = 'row justify-content-center'>
+		<div id = 'tomatoes'class = 'col-md-4'>
+			<img v-for ='tomato in tomatoes' src = 'img/tomato.png'>
+		</div>
+
+	</div>
+
+
+</div>
+
+
+
+
+
+</div>
+
+
 
 
 </div>
