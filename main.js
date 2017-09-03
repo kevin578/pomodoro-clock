@@ -1,19 +1,52 @@
 window.onload = function(){
 
-var snd = new Audio("img/bell.mp3"); // buffers automatically when created
+
+//Gets bell sound
+var snd = new Audio("img/bell.mp3");
 snd.volume = .4;
+
+/* This change view object has four methods to choose from: init, reset, toPom, toBreak */
+var changeView = {
+
+  toInit: function() {
+      clocks.render.breakClock = false;
+      clocks.render.arrows = false;
+      document.getElementById('pomNumbers').style.width = '500px'
+      document.getElementById('breakNumbers').style.width = '500px'
+  },
+
+  toReset: function() {
+      clocks.render.breakClock = true;
+      clocks.render.pomodoro = true;
+      clocks.render.arrows = true;
+      document.getElementById('pomNumbers').style.width = '400px';
+      document.getElementById('breakNumbers').style.width = '400px';
+  },
+
+  toPom: function() {
+        clocks.render.pomodoro = true;
+        clocks.render.breakClock = false;
+  },
+
+  toBreak: function() {
+        clocks.render.pomodoro = false;
+        clocks.render.breakClock = true;
+  }
+
+}
+
+//Vue object
 
 var clocks = new Vue({
 
   el: '#main-clock',
   data: {
-    pomodoro: 3,
+    pomodoro: 1500,
     pomInit: 0,
-    breakClock: 10,
+    breakClock: 300,
     breakInit: 0,
-    stopTime: 0,
-    stopped: true,
-    message: 'Start',
+    isRunning: false,
+    buttonText: 'Start',
     currentClock: 'pomodoro' ,
     render: {
       pomodoro: true,
@@ -21,90 +54,113 @@ var clocks = new Vue({
       arrows: true,
 
     },
-    classes: {
-      pomodoro: 'col-md-3',
-      breakClock: 'col-md-3',
-      breakRunning: true 
-    },
     tomatoes: []
   },
 
   methods: {
 
-    
+  /* Init clock runs when the Start/Reset button is presssed. It 
+  checks if the clock is running. If it is, then it prompts it 
+  to reset. If it's not runnign then it starts the clock */  
+
     initClock: function(clock) {
 
-      if (this.stopped === false) {
+      if (this.isRunning === true) {
       this.reset();
     }
       else {
-      this.stopped = false;
-      this.message = 'Reset'
+
+      /* sets isRunning to true and changes the label on the button 
+      to reflect this new state */
+
+      this.isRunning = true;
+      this.buttonText = 'Reset'
+
+      // takes the values from clocks and saves for when the clock resets
       this.pomInit = this.pomodoro;
       this.breakInit = this.breakClock;
-      this.render.breakClock = false;
-      this.render.arrows = false;
-      this.classes.pomodoro = 'col-4';
-      this.classes.breakClock = 'col-4';
-      this.continueClock(clock);
 
+      //change the view and starts the clock
+      changeView.toInit();
+      this.continueClock(clock);
     }
 
-    },
+  },
+
+    //Method that sets a timeout for 1 second then fires a callback
 
     continueClock: function(clock) {
       window.setTimeout(this.decreaseClock, 1000, clock);      
     },
 
+
+    /* Callback when timeout is completed. It checks that it is both 
+    still above zero and that the Reset button hasn't been pressed
+    to switch isRunning to false. If the counter is at zero, it dings
+    the bell and switches to the next clock */
+
     decreaseClock: function(clock) {
 
-      if (this[clock] > this.stopTime && this.stopped == false) {
-       
+      if (this[clock] > 0 && this.isRunning == true) {
+
         this[clock]--;
         this.continueClock(clock);
       }
-      else if (this[clock] <= this.stopTime) {
+      else if (this[clock] <= 0) {
         snd.play();
         this.nextClock();
       }
     },
 
+    /*Two methods that change either the Pomodoro or Break clocks. They 
+    also check against going below zero*/
+
     increaseNum: function(num) {
-        this[num]++
+      if (this[num] < 10,800) {
+        this[num] += 60;
+      }
     },
 
     decreaseNum: function(num) {
-        this[num]--
+      if (this[num] > 60) {
+        this[num] -= 60;
+      }
     },
+
+    /* Resets clock back to original state. The only difference is that pomodoro and 
+    break numbers are whatever they chose */
 
     reset: function() {
-      this.stopped = true;
-      this.message = 'Start';
+      this.isRunning = false;
+      this.buttonText = 'Start';
+      this.currentClock = 'pomodoro'
       this.pomodoro = this.pomInit;
       this.breakClock = this.breakInit;
-      this.render.pomodoro = true;
-      this.render.breakClock = true;
-      this.render.arrows = true;
+
       this.tomatoes = [];
-      this.classes.pomodoro = 'col-3';
-      this.classes.breakClock = 'col-3';
+
+      changeView.toReset();
 
     },
+
+    /* Switches between the pomodoro and break clocks. It also adds a tomoato to the bottom, so the 
+    user can keep track of how many pomodoros they've gone through */
 
     nextClock: function() {
 
       if (this.currentClock == 'pomodoro') {
-        this.breakClock = this.breakInit;
-        this.continueClock('breakClock');
-        this.currentClock = 'breakClock'
-        this.render.pomodoro = false;
-        this.render.breakClock = true;
+        this.breakClock = this.breakInit; //set break to original value
+        this.currentClock = 'breakClock'; //keep track of which clock is being use
+        changeView.toBreak(); //switch the view
+        this.continueClock('breakClock'); //start next clock
         
+        //add the tomato
         if (this.tomatoes.length < 5) {
         this.tomatoes.push('tomatillo');
         }
+        
         else {
-          this.tomatoes = [];
+          this.tomatoes = []; //reset the array if they went higher the 5
         }
 
       }
@@ -113,24 +169,41 @@ var clocks = new Vue({
         this.pomodoro = this.pomInit;
         this.continueClock('pomodoro');
         this.currentClock = 'pomodoro';
-        this.render.pomodoro = true;
-        this.render.breakClock = false;
+        changeView.toPom();
       }
 
+    },
 
+    /* Method to convert seconds to actual time. It converst a date object 
+    into a string. It first calculates how many digits it will need and where in 
+    the string it will choose from. */
+    
+    convertToTime: function(num) {
+        var start;
+        var length;
 
+        if (num > 3599) {
+          start = 12;
+          length = 7;
+        }
+        else if (num > 599 & num <= 3599) {
+          start = 14;
+          length = 5;
+        }
+        else {
+          start = 15;
+          length = 4;
+        }
+        var date = new Date(null);
+        date.setSeconds(num); // specify value for SECONDS here
+        var result = date.toISOString().substr(start, length);
+
+        return result;
     }
-
-
-  }
-
-
-
+  }, //ends methods 
+ 
 
 });
-
-
-
 
 
 }
