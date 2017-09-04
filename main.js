@@ -11,16 +11,28 @@ var changeView = {
   toInit: function() {
       clocks.render.breakClock = false;
       clocks.render.arrows = false;
-      document.getElementById('pomNumbers').style.width = '500px'
-      document.getElementById('breakNumbers').style.width = '500px'
+      if (window.matchMedia( "(min-width: 775px)").matches) {
+        document.getElementById('pomNumbers').style.width = '500px'
+        document.getElementById('breakNumbers').style.width = '500px'
+    }
+    else {
+        document.getElementById('pomNumbers').style.width = '100%'
+        document.getElementById('breakNumbers').style.width = '100%'
+    }
   },
 
   toReset: function() {
       clocks.render.breakClock = true;
       clocks.render.pomodoro = true;
       clocks.render.arrows = true;
-      document.getElementById('pomNumbers').style.width = '400px';
-      document.getElementById('breakNumbers').style.width = '400px';
+      if (window.matchMedia( "(min-width: 775px)").matches) {
+        document.getElementById('pomNumbers').style.width = '400px'
+        document.getElementById('breakNumbers').style.width = '400px'
+    }
+      else {
+        document.getElementById('pomNumbers').style.width = '50%'
+        document.getElementById('breakNumbers').style.width = '50%'
+      }
   },
 
   toPom: function() {
@@ -52,6 +64,7 @@ var clocks = new Vue({
       pomodoro: true,
       breakClock: true,
       arrows: true,
+      infoScreen: true
 
     },
     tomatoes: []
@@ -90,6 +103,7 @@ var clocks = new Vue({
     //Method that sets a timeout for 1 second then fires a callback
 
     continueClock: function(clock) {
+      this.calculatePercentage(this.currentClock);
       window.setTimeout(this.decreaseClock, 1000, clock);      
     },
 
@@ -133,9 +147,12 @@ var clocks = new Vue({
     reset: function() {
       this.isRunning = false;
       this.buttonText = 'Start';
-      this.currentClock = 'pomodoro'
       this.pomodoro = this.pomInit;
       this.breakClock = this.breakInit;
+      this.calculatePercentage('pomodoro');
+      this.calculatePercentage('breakClock');
+      this.currentClock = 'pomodoro'
+
 
       this.tomatoes = [];
 
@@ -150,6 +167,7 @@ var clocks = new Vue({
 
       if (this.currentClock == 'pomodoro') {
         this.breakClock = this.breakInit; //set break to original value
+        this.pomodoro = this.pomInit;
         this.currentClock = 'breakClock'; //keep track of which clock is being use
         changeView.toBreak(); //switch the view
         this.continueClock('breakClock'); //start next clock
@@ -166,6 +184,7 @@ var clocks = new Vue({
       }
 
       else {
+        this.breakClock = this.breakInit;
         this.pomodoro = this.pomInit;
         this.continueClock('pomodoro');
         this.currentClock = 'pomodoro';
@@ -199,6 +218,13 @@ var clocks = new Vue({
         var result = date.toISOString().substr(start, length);
 
         return result;
+    },
+
+    calculatePercentage: function(bar) {
+        var targetClass = bar == 'pomodoro' ? 'pomProgress' : 'breakProgress';
+        var initValue = bar == 'pomodoro' ? 'pomInit' : 'breakInit';
+        var pct = Math.round( (this[initValue] - this[bar]) / this[initValue] * 100);
+        document.getElementById(targetClass).style.width = pct + '%'
     }
   }, //ends methods 
  

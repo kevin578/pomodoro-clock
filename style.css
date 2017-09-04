@@ -17,12 +17,19 @@ body {
 	margin-top: 30px;
 }
 /* Overall styles for the number parts of the two clocks*/
-.digits {
+.digits, .clockChange {
 	font-size: 50px;
 	width: 400px;
 	height: 100px;
 	line-height: 100px;
 }
+
+/* Changes while clocks are running */
+
+.clockChange {
+	width: 500px;
+}
+
 /* puts a margin on the digits*/
 .progressBar > p {
 	margin-left: 30px;
@@ -69,6 +76,12 @@ body {
 	width: 0%;
 }
 
+#breakProgress {
+	background: #bfefd8;
+	margin-left: 0px;
+	width: 0%;
+}
+
 
 /* Break */
 
@@ -96,6 +109,14 @@ body {
 	height: 80px;
 	padding-left: 20px;
 	line-height: 80px;
+}
+
+/* Tagline with author and Github links */
+#tagline {
+	font-size: 15px;
+	display: inline-block;
+	margin-top: 20px;
+
 }
 
 
@@ -132,6 +153,7 @@ body {
 	height: 150px;
 	text-align: center;
 	line-height: 150px;
+
 }
 
 #tomatoes {

@@ -14,7 +14,7 @@
 	<div class="container">
 	
 	<!-- Pomodoo timer -->
-	<div>
+
 
 	<div v-show = 'render.pomodoro'>
 	<!-- Label -->
@@ -50,7 +50,7 @@
 	<!-- numbers for the break clock-->
 	<div class = 'row justify-content-center'>
 		<div id = 'breakNumbers' class = 'digits'>
-			<div id = 'pomProgress' class = progressBar><p>{{convertToTime(breakClock)}}</p></div>
+			<div id = 'breakProgress' class = progressBar><p>{{convertToTime(breakClock)}}</p></div>
 		</div>
 	<!-- break arrows -->
 		<div  id = 'breakArrows' v-show = 'render.arrows' class = 'arrows'>
@@ -66,13 +66,19 @@
 		<div id = 'startClocks' v-on:click = 'initClock("pomodoro")' class = ' digits'>
 			{{buttonText}}
 		</div>
+		
 	</div>
 	
+	<!-- Tomatoes! -->
 	<div class = 'row justify-content-center'>
 		<div id = 'tomatoes'>
 			<img v-for ='tomato in tomatoes' src = 'img/tomato.png'>
 		</div>
 
+	</div>
+
+	<div class = 'row justify-content-center'>
+		<span id = 'tagline'>by Kevin Briggs - <a href = 'https://github.com/kevin578/pomodoro-clock' target = '_blank'>Github</a></span>
 	</div>
 
 
